@@ -262,12 +262,17 @@ class FlutterWearOsConnectivity extends FlutterSmartWatchPlatformInterface {
   }
 
   ///Obtain all available [DataItem]s on Android Wear network
-  Future<List<DataItem>> getAllDataItems() async {
-    List? results = await channel.invokeMethod("getAllDataItems");
-    return (results ?? [])
-        .map((result) =>
-            DataItem.fromJson((result as Map? ?? {}).toMapStringDynamic()))
-        .toList();
+  void getAllDataItems() async {
+    await channel.invokeMethod("getAllDataItems");
+
+    // String key = "global_data_channel";
+
+    // Map<String, StreamController<List<DataEvent>>> _dataStreamControllers =
+    //     _wearOSObserver.streamControllers[ObservableType.data]
+    //         as Map<String, StreamController<List<DataEvent>>>;
+
+    // _dataStreamControllers[key] = StreamController.broadcast();
+    // yield* _dataStreamControllers[key]!.stream;
   }
 
   /// Listen to data change or delete events

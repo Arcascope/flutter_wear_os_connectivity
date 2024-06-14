@@ -17,6 +17,14 @@ class WearOSObserver {
 
   Future _methodCallhandler(MethodCall call) async {
     switch (call.method) {
+      case "syncingData":
+        List results = call.arguments["data"];
+        streamControllers[ObservableType.data]![call.arguments["key"] ?? ""]
+            ?.add(results
+                .map((result) => DataEvent.fromJson(
+                    (result as Map? ?? {}).toMapStringDynamic()))
+                .toList());
+        break;
       case "onCapabilityChanged":
         try {
           CapabilityInfo _capabilityInfo = CapabilityInfo.fromJson(
