@@ -1,6 +1,6 @@
 part of helpers;
 
-enum ObservableType { capability, message, data }
+enum ObservableType { capability, message, data, allData }
 
 enum CapabilityFilterType { all, reachable }
 

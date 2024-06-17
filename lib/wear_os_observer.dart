@@ -11,6 +11,9 @@ class WearOSObserver {
     ObservableType.data: Map<String, StreamController<List<DataEvent>>>()
   };
 
+  StreamController<List<DataItem>> dataItemStreamController =
+      StreamController<List<DataItem>>();
+
   WearOSObserver() {
     callbackChannel.setMethodCallHandler(_methodCallhandler);
   }
@@ -18,12 +21,15 @@ class WearOSObserver {
   Future _methodCallhandler(MethodCall call) async {
     switch (call.method) {
       case "syncingData":
-        List results = call.arguments["data"];
-        streamControllers[ObservableType.data]![call.arguments["key"] ?? ""]
-            ?.add(results
-                .map((result) => DataEvent.fromJson(
-                    (result as Map? ?? {}).toMapStringDynamic()))
-                .toList());
+        final results = call.arguments;
+
+        final converted = (results ?? [])
+            .map((result) =>
+                DataItem.fromJson((result as Map? ?? {}).toMapStringDynamic()))
+            .toList();
+        final ws = converted.map((item) => item as DataItem).toList();
+
+        dataItemStreamController.add(ws.cast<DataItem>());
         break;
       case "onCapabilityChanged":
         try {
